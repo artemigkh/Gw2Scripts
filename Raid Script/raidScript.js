@@ -9,6 +9,7 @@ function findOpenableBosses(i){
 		outputToDOM();
 	} else {
 		jQuery.get( API_STRING + members[i][1], function( response ) { 
+			console.log(response);
 			findWingOneBoss();
 			findWingTwoBoss();
 			findWingThreeBoss();
@@ -25,6 +26,12 @@ function outputToDOM(){
 function findWingOneBoss(){
 
 }
-function findWingTwoBoss();
-function findWingThreeBoss();
-function findWingFourBoss();
+function findWingTwoBoss(){
+
+}
+function findWingThreeBoss(){
+
+}
+function findWingFourBoss(){
+
+}
