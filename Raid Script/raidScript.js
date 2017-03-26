@@ -1,10 +1,18 @@
 var openableBosses = [];
 var numMembers = members.length;
 var API_STRING = "https://api.guildwars2.com/v2/account/raids?access_token=";
+var bossesList = ["vale_guardian", "gorseval", "sabetha", "slothasor", "bandit_trio", "matthias", "escort", "keep_construct", "xera", "cairn", "mursaat_overseer", "samarog", "deimos"];
+var bossesListHR = ["Value Guardian", "Gorseval", "Sabetha", "Slothasor", "Bandit Trio", "Matthias", "Escort", "Keep Construct", "Xera", "Cairn", "Mursaat Overseer", "Samarog", "Deimos"];
+var requiredBosses = [];
 
-findOpenableBosses(0);
+start();
 
-function findOpenableBosses(i){
+function start(){
+	initializeRequiredBosses();
+	processApiData(0);
+}
+
+function processApiData(i){
 	if(i == numMembers){
 		outputToDOM();
 	} else {
@@ -13,7 +21,8 @@ function findOpenableBosses(i){
 			findWingTwoBoss(response, members[i][0]);
 			findWingThreeBoss(response, members[i][0]);
 			findWingFourBoss(response, members[i][0]);
-			findOpenableBosses(i + 1);
+			updateUnclearedBosses(response, members[i][0]);
+			processApiData(i + 1);
 		} );
 	}
 }
@@ -137,6 +146,7 @@ function findWingFourBoss(bosses, member){
 
 function outputToDOM(){
 	outputOpenersToDOM();
+	outputRequiredBossesToDOM();
 }
 
 function outputOpenersToDOM(){
@@ -188,4 +198,53 @@ function addOpenerRow(table, bossId, bossName, bosses, openers) {
 		}
 		table.insertAdjacentHTML( 'beforeend', "<tr><td>" + bossName + "</td><td>" + bossOpeners + "</td></tr>");
 	}
+}
+
+function initializeRequiredBosses() {
+	for(var a = 0; a < bossesList.length; a++){
+		requiredBosses.push([bossesList[a], 0, []]);
+	}
+}
+
+function findUnclearedBosses(unclB) {
+	return bossesList.filter( function( el ) {
+	  return !unclB.includes( el );
+	} );
+}
+
+function updateUnclearedBosses(currMemberBosses, member){
+	unlcearedBosses = findUnclearedBosses(currMemberBosses);
+	for(var a = 0; a < unlcearedBosses.length; a++){
+		requiredBosses[bossesList.indexOf(unlcearedBosses[a])][1]++;
+		requiredBosses[bossesList.indexOf(unlcearedBosses[a])][2].push(member);
+	}
+}
+
+function outputRequiredBossesToDOM(){
+	requiredBosses = requiredBosses.sort(compare);
+	table = document.getElementById("reqBossesTable");
+	for(var a = 0; a < requiredBosses.length; a++){
+		membersTR = "";
+		for(var l = 0; l < requiredBosses[a][2].length; l++){
+			membersTR += requiredBosses[a][2][l];
+			if(l != requiredBosses[a][2].length - 1){
+				membersTR += ", "
+			}
+		}
+		var row = table.insertRow();
+		row.insertCell(0).innerHTML = bossesListHR[bossesList.indexOf(requiredBosses[a][0])];
+		row.insertCell(1).innerHTML = requiredBosses[a][1];
+		row.insertCell(2).innerHTML = membersTR;
+	}
+
+}
+
+function compare(a, b){
+	if(a[1] < b[1]){
+		return 1;
+	}
+	if(a[1] > b[1]){
+		return -1;
+	}
+	return 0;
 }
