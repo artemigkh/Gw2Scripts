@@ -1,68 +1,101 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<script src="jquery-3.1.1.min.js"></script>
-		<script src="members.js"></script>
-		<script src="raidScript.js"></script>
-	</head>
 	<body>
-		<h1> Openable Instances </h1>
-		<h2> Wing 1 </h2>
-		<div>
-			<table style="width:750px; padding-left:40px; table-layout:fixed">
-				<tbody  id="wing1table">
-				  <tr style="text-align:left">
-				    <th>Boss</th>
-				    <th>Openable By</th> 
-				  </tr>
-				</tbody>
-			</table>
-		</div>
-		<h2> Wing 2 </h2>
-		<div>
-			<table style="width:750px; padding-left:40px; table-layout:fixed">
-				<tbody  id="wing2table">
-				  <tr style="text-align:left">
-				    <th>Boss</th>
-				    <th>Openable By</th> 
-				  </tr>
-				</tbody>
-			</table>
-		</div>
-		<h2> Wing 3 </h2>
-		<div>
-			<table style="width:750px; padding-left:40px; table-layout:fixed">
-				<tbody  id="wing3table">
-				  <tr style="text-align:left">
-				    <th>Boss</th>
-				    <th>Openable By</th> 
-				  </tr>
-				</tbody>
-			</table>
-		</div>
-		<h2> Wing 4 </h2>
-		<div>
-			<table style="width:750px; padding-left:40px; table-layout:fixed">
-				<tbody  id="wing4table">
-				  <tr style="text-align:left">
-				    <th>Boss</th>
-				    <th>Openable By</th> 
-				  </tr>
-				</tbody>
-			</table>
+
+		<div class="tab" id="TabBar" style="display:none">
+  			<button class="tablinks" onclick="openTab(event, 'OpenableInstancesTab')">Openable Instances</button>
+  			<button class="tablinks" onclick="openTab(event, 'RequiredBossesTab')">Required Bosses</button>
+  			<button class="tablinks" onclick="openTab(event, 'MemberSelectTab')">Member Select</button>
 		</div>
 
-		<h1> Required Bosses </h1>
-		<div>
-			<table style="width:100%; padding-left:40px">
-				<tbody id="reqBossesTable">
-					<tr style="text-align:left">
-					    <th>Boss</th>
-					    <th>Count</th>
-					    <th>Required By</th> 
-				    </tr>
-				</tbody>
-			</table>
+		<div id="LoadingDiv">
+			<h2 style="text-align:center"> Loading ... Please wait while API data is being retrieved</h2>
 		</div>
+
+		<div id="OpenableInstancesTab" class="tabcontent">
+			<h1> Openable Instances </h1>
+			<h2> Wing 1 </h2>
+			<div>
+				<table style="width:750px; padding-left:40px; table-layout:fixed">
+					<tbody  id="wing1table">
+					  <tr style="text-align:left">
+					    <th>Boss</th>
+					    <th>Openable By</th> 
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+			<h2> Wing 2 </h2>
+			<div>
+				<table style="width:750px; padding-left:40px; table-layout:fixed">
+					<tbody  id="wing2table">
+					  <tr style="text-align:left">
+					    <th>Boss</th>
+					    <th>Openable By</th> 
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+			<h2> Wing 3 </h2>
+			<div>
+				<table style="width:750px; padding-left:40px; table-layout:fixed">
+					<tbody  id="wing3table">
+					  <tr style="text-align:left">
+					    <th>Boss</th>
+					    <th>Openable By</th> 
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+			<h2> Wing 4 </h2>
+			<div>
+				<table style="width:750px; padding-left:40px; table-layout:fixed">
+					<tbody  id="wing4table">
+					  <tr style="text-align:left">
+					    <th>Boss</th>
+					    <th>Openable By</th> 
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="RequiredBossesTab" class="tabcontent">
+			<h1> Required Bosses </h1>
+			<div>
+				<table style="width:100%; padding-left:40px">
+					<tbody id="reqBossesTable">
+						<tr style="text-align:left">
+						    <th>Boss</th>
+						    <th>Count</th>
+						    <th>Required By</th> 
+					    </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="MemberSelectTab" class="tabcontent">
+			<h1> Member Select </h1>
+			<div>
+				<table style="width:400px; padding-left:40px">
+					<tbody id="MembersTable">
+						<tr style="text-align:left">
+						    <th>Member</th>
+						    <th>Present</th>
+					    </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
 	</body>
+
+	<head>
+		<script src="jquery-3.1.1.min.js"></script>
+		<script src="webpageController.js"></script>
+		<script src="members.js"></script>
+		<script src="raidScript.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
 </html>

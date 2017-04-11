@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<body>
+
+		<div class="tab" id="TabBar" style="display:none">
+  			<button class="tablinks" onclick="openTab(event, 'OpenableInstancesTab')">Openable Instances</button>
+  			<button class="tablinks" onclick="openTab(event, 'RequiredBossesTab')">Required Bosses</button>
+  			<button class="tablinks" onclick="openTab(event, 'MemberSelectTab')">Member Select</button>
+		</div>
+
+		<div id="LoadingDiv">
+			<h2 style="text-align:center"> Loading ... Please wait while API data is being retrieved</h2>
+		</div>
+
+		<div id="OpenableInstancesTab" class="tabcontent">
+			<h1> Openable Instances </h1>
+			<h2> Wing 1 </h2>
+			<div>
+				<table style="width:750px; padding-left:40px; table-layout:fixed">
+					<tbody  id="wing1table">
+					  <tr style="text-align:left">
+					    <th>Boss</th>
+					    <th>Openable By</th> 
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+			<h2> Wing 2 </h2>
+			<div>
+				<table style="width:750px; padding-left:40px; table-layout:fixed">
+					<tbody  id="wing2table">
+					  <tr style="text-align:left">
+					    <th>Boss</th>
+					    <th>Openable By</th> 
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+			<h2> Wing 3 </h2>
+			<div>
+				<table style="width:750px; padding-left:40px; table-layout:fixed">
+					<tbody  id="wing3table">
+					  <tr style="text-align:left">
+					    <th>Boss</th>
+					    <th>Openable By</th> 
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+			<h2> Wing 4 </h2>
+			<div>
+				<table style="width:750px; padding-left:40px; table-layout:fixed">
+					<tbody  id="wing4table">
+					  <tr style="text-align:left">
+					    <th>Boss</th>
+					    <th>Openable By</th> 
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="RequiredBossesTab" class="tabcontent">
+			<h1> Required Bosses </h1>
+			<div>
+				<table style="width:100%; padding-left:40px">
+					<tbody id="reqBossesTable">
+						<tr style="text-align:left">
+						    <th>Boss</th>
+						    <th>Count</th>
+						    <th>Required By</th> 
+					    </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="MemberSelectTab" class="tabcontent">
+			<h1> Member Select </h1>
+			<div>
+				<table style="width:400px; padding-left:40px">
+					<tbody id="MembersTable">
+						<tr style="text-align:left">
+						    <th>Member</th>
+						    <th>Present</th>
+					    </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</body>
+
+	<head>
+		<script src="jquery-3.1.1.min.js"></script>
+		<script src="members.js"></script>
+		<script type="text/javascript">
+		function start(){initializeCurrentMembers(),initializeRequiredBosses(),processApiData(0)}function postApiCall(){startWebpage();for(var e=0;e<currMembers.length;e++)updateBossData(getValueFromKey(apiResponse,currMembers[e]),currMembers[e]);outputToDOM()}function startWebpage(){document.getElementById("LoadingDiv").style.display="none",document.getElementById("TabBar").style.display="block",document.getElementById("OpenableInstancesTab").style.display="block",document.getElementById("TabBar").children[0].className+=" active"}function updateWebage(){refreshDomAndGlobals();for(var e=0;e<currMembers.length;e++)updateBossData(getValueFromKey(apiResponse,currMembers[e]),currMembers[e]);outputOpenersToDOM(),outputRequiredBossesToDOM()}function processApiData(e){e==numMembers?postApiCall():jQuery.get(API_STRING+members[e][1],function(s){apiResponse.push([members[e][0],s]),processApiData(e+1)})}function updateBossData(e,s){findWingOneBoss(e,s),findWingTwoBoss(e,s),findWingThreeBoss(e,s),findWingFourBoss(e,s),updateUnclearedBosses(e,s)}function findWingOneBoss(e,s){for(var r=[!1,!1,!1,!1],o=0;o<e.length;o++){var t=e[o];"vale_guardian"==t?r[0]=!0:"spirit_woods"==t?r[1]=!0:"gorseval"==t?r[2]=!0:"sabetha"==t&&(r[3]=!0)}return r[0]?r[1]?r[2]?r[3]?void 0:void openableBosses.push(["sabetha",s]):void openableBosses.push(["gorseval",s]):void openableBosses.push(["spirit_woods",s]):void openableBosses.push(["vale_guardian",s])}function findWingTwoBoss(e,s){for(var r=[!1,!1,!1],o=0;o<e.length;o++){var t=e[o];"slothasor"==t?r[0]=!0:"bandit_trio"==t?r[1]=!0:"matthias"==t&&(r[2]=!0)}return r[0]?r[1]?r[2]?void 0:void openableBosses.push(["matthias",s]):void openableBosses.push(["bandit_trio",s]):void openableBosses.push(["slothasor",s])}function findWingThreeBoss(e,s){for(var r=[!1,!1,!1,!1],o=0;o<e.length;o++){var t=e[o];"escort"==t?r[0]=!0:"keep_construct"==t?r[1]=!0:"twisted_castle"==t?r[2]=!0:"xera"==t&&(r[3]=!0)}return r[0]?r[1]?r[2]?r[3]?void 0:void openableBosses.push(["xera",s]):void openableBosses.push(["twisted_castle",s]):void openableBosses.push(["keep_construct",s]):void openableBosses.push(["escort",s])}function findWingFourBoss(e,s){for(var r=[!1,!1,!1,!1],o=0;o<e.length;o++){var t=e[o];"cairn"==t?r[0]=!0:"mursaat_overseer"==t?r[1]=!0:"samarog"==t?r[2]=!0:"deimos"==t&&(r[3]=!0)}return r[0]?r[1]?r[2]?r[3]?void 0:void openableBosses.push(["deimos",s]):void openableBosses.push(["samarog",s]):void openableBosses.push(["mursaat_overseer",s]):void openableBosses.push(["cairn",s])}function outputToDOM(){outputOpenersToDOM(),outputRequiredBossesToDOM(),outputMembersManagementList()}function outputOpenersToDOM(){for(var e=[],s=[],r=0;r<openableBosses.length;r++){var o=e.indexOf(openableBosses[r][0]);-1==o?(e.push(openableBosses[r][0]),s.push([openableBosses[r][1]])):s[o].push(openableBosses[r][1])}var t=document.getElementById("wing1table");addOpenerRow(t,"vale_guardian","Vale Guardian",e,s),addOpenerRow(t,"spirit_woods","Spirit Woods",e,s),addOpenerRow(t,"gorseval","Gorseval",e,s),addOpenerRow(t,"sabetha","Sabetha",e,s);var a=document.getElementById("wing2table");addOpenerRow(a,"slothasor","Slothasor",e,s),addOpenerRow(a,"bandit_trio","Bandit Trio",e,s),addOpenerRow(a,"matthias","Matthias",e,s);var n=document.getElementById("wing3table");addOpenerRow(n,"escort","Escort",e,s),addOpenerRow(n,"keep_construct","Keep Construct",e,s),addOpenerRow(n,"twisted_castle","Twisted Castle",e,s),addOpenerRow(n,"xera","Xera",e,s);var i=document.getElementById("wing4table");addOpenerRow(i,"cairn","Cairn",e,s),addOpenerRow(i,"mursaat_overseer","Mursaat Overseer",e,s),addOpenerRow(i,"samarog","Samarog",e,s),addOpenerRow(i,"deimos","Deimos",e,s)}function addOpenerRow(e,s,r,o,t){var a=o.indexOf(s);if(-1!=a){for(var n="",i=0;i<t[a].length;i++)n+=t[a][i],i!=t[a].length-1&&(n+=", ");e.insertAdjacentHTML("beforeend","<tr class='tempRow'><td>"+r+"</td><td>"+n+"</td></tr>")}}function initializeRequiredBosses(){for(var e=0;e<bossesList.length;e++)requiredBosses.push([bossesList[e],0,[]])}function initializeCurrentMembers(){for(var e=0;e<members.length;e++)currMembers.push(members[e][0])}function findUnclearedBosses(e){return bossesList.filter(function(s){return!e.includes(s)})}function updateUnclearedBosses(e,s){unlcearedBosses=findUnclearedBosses(e);for(var r=0;r<unlcearedBosses.length;r++)requiredBosses[bossesList.indexOf(unlcearedBosses[r])][1]++,requiredBosses[bossesList.indexOf(unlcearedBosses[r])][2].push(s)}function outputRequiredBossesToDOM(){requiredBosses=requiredBosses.sort(compare),table=document.getElementById("reqBossesTable");for(var e=0;e<requiredBosses.length;e++){membersTR="";for(var s=0;s<requiredBosses[e][2].length;s++)membersTR+=requiredBosses[e][2][s],s!=requiredBosses[e][2].length-1&&(membersTR+=", ");var r=table.insertRow();r.className+=" tempRow",r.insertCell(0).innerHTML=bossesListHR[bossesList.indexOf(requiredBosses[e][0])],r.insertCell(1).innerHTML=requiredBosses[e][1],r.insertCell(2).innerHTML=membersTR}}function compare(e,s){return e[1]<s[1]?1:e[1]>s[1]?-1:0}function getValueFromKey(e,s){for(var r=0;r<e.length;r++)if(e[r][0]==s)return e[r][1]}function outputMembersManagementList(){for(var e=document.getElementById("MembersTable"),s=0;s<members.length;s++){var r=e.insertRow();r.insertCell(0).innerHTML=members[s][0];var o=r.insertCell(1);o.innerHTML="<input type='checkbox' id='cbox1' checked>"}$("input[type='checkbox']").each(function(){var e=$(this)[0];$(this).click(function(){e.checked?addMember(e,!1):removeMember(e,!1)})})}function removeMember(e){var s=e.parentElement.parentElement.children[0].innerHTML,r=currMembers.indexOf(s);r>-1&&currMembers.splice(r,1),updateWebage()}function addMember(e){var s=e.parentElement.parentElement.children[0].innerHTML;currMembers.push(s),updateWebage()}function refreshDomAndGlobals(){$(".tempRow").each(function(){$(this).remove()}),openableBosses=[],requiredBosses=[],initializeRequiredBosses()}function openTab(e,s){var r=document.getElementsByClassName("tabcontent");for(i=0;i<r.length;i++)r[i].style.display="none";var o=document.getElementsByClassName("tablinks");for(i=0;i<o.length;i++)o[i].className=o[i].className.replace(" active","");document.getElementById(s).style.display="block",e.currentTarget.className+=" active"}var apiResponse=[],currMembers=[],openableBosses=[],numMembers=members.length,API_STRING="https://api.guildwars2.com/v2/account/raids?access_token=",bossesList=["vale_guardian","gorseval","sabetha","slothasor","bandit_trio","matthias","escort","keep_construct","xera","cairn","mursaat_overseer","samarog","deimos"],bossesListHR=["Value Guardian","Gorseval","Sabetha","Slothasor","Bandit Trio","Matthias","Escort","Keep Construct","Xera","Cairn","Mursaat Overseer","Samarog","Deimos"],requiredBosses=[];start();
+		</script>
+		<style>
+		div.tab{overflow:hidden;border:1px solid #ccc;background-color:#f1f1f1}div.tab button{background-color:inherit;float:left;border:none;outline:0;cursor:pointer;padding:14px 16px;transition:.3s}div.tab button:hover{background-color:#ddd}div.tab button.active{background-color:#ccc}.tabcontent{display:none;padding:6px 12px;border:1px solid #ccc;border-top:none}
+		</style>
+	</head>
+</html>

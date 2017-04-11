@@ -1,3 +1,5 @@
+var apiResponse = [];
+var currMembers = [];
 var openableBosses = [];
 var numMembers = members.length;
 var API_STRING = "https://api.guildwars2.com/v2/account/raids?access_token=";
@@ -8,23 +10,52 @@ var requiredBosses = [];
 start();
 
 function start(){
+	initializeCurrentMembers();
 	initializeRequiredBosses();
 	processApiData(0);
 }
 
+function postApiCall(){
+	startWebpage();
+	for(var a = 0; a < currMembers.length; a++){
+		updateBossData(getValueFromKey(apiResponse, currMembers[a]), currMembers[a]);
+	}
+	outputToDOM();
+}
+
+function startWebpage(){
+	document.getElementById("LoadingDiv").style.display = "none";
+	document.getElementById("TabBar").style.display = "block";
+	document.getElementById("OpenableInstancesTab").style.display = "block";
+	document.getElementById("TabBar").children[0].className += " active";
+}
+
+function updateWebage(){
+	refreshDomAndGlobals();
+	for(var a = 0; a < currMembers.length; a++){
+		updateBossData(getValueFromKey(apiResponse, currMembers[a]), currMembers[a]);
+	}
+	outputOpenersToDOM();
+	outputRequiredBossesToDOM();
+}
+
 function processApiData(i){
 	if(i == numMembers){
-		outputToDOM();
+		postApiCall();
 	} else {
 		jQuery.get( API_STRING + members[i][1], function( response ) { 
-			findWingOneBoss(response, members[i][0]);
-			findWingTwoBoss(response, members[i][0]);
-			findWingThreeBoss(response, members[i][0]);
-			findWingFourBoss(response, members[i][0]);
-			updateUnclearedBosses(response, members[i][0]);
+			apiResponse.push([members[i][0], response]);
 			processApiData(i + 1);
 		} );
 	}
+}
+
+function updateBossData(response, member){
+	findWingOneBoss(response, member);
+	findWingTwoBoss(response, member);
+	findWingThreeBoss(response, member);
+	findWingFourBoss(response, member);
+	updateUnclearedBosses(response, member);
 }
 
 
@@ -147,6 +178,7 @@ function findWingFourBoss(bosses, member){
 function outputToDOM(){
 	outputOpenersToDOM();
 	outputRequiredBossesToDOM();
+	outputMembersManagementList();
 }
 
 function outputOpenersToDOM(){
@@ -196,13 +228,19 @@ function addOpenerRow(table, bossId, bossName, bosses, openers) {
 				bossOpeners += ", "
 			}
 		}
-		table.insertAdjacentHTML( 'beforeend', "<tr><td>" + bossName + "</td><td>" + bossOpeners + "</td></tr>");
+		table.insertAdjacentHTML( 'beforeend', "<tr class='tempRow'><td>" + bossName + "</td><td>" + bossOpeners + "</td></tr>");
 	}
 }
 
 function initializeRequiredBosses() {
 	for(var a = 0; a < bossesList.length; a++){
 		requiredBosses.push([bossesList[a], 0, []]);
+	}
+}
+
+function initializeCurrentMembers() {
+	for(var a = 0; a < members.length; a++){
+		currMembers.push(members[a][0]);
 	}
 }
 
@@ -221,6 +259,7 @@ function updateUnclearedBosses(currMemberBosses, member){
 }
 
 function outputRequiredBossesToDOM(){
+
 	requiredBosses = requiredBosses.sort(compare);
 	table = document.getElementById("reqBossesTable");
 	for(var a = 0; a < requiredBosses.length; a++){
@@ -232,6 +271,7 @@ function outputRequiredBossesToDOM(){
 			}
 		}
 		var row = table.insertRow();
+		row.className += " tempRow";
 		row.insertCell(0).innerHTML = bossesListHR[bossesList.indexOf(requiredBosses[a][0])];
 		row.insertCell(1).innerHTML = requiredBosses[a][1];
 		row.insertCell(2).innerHTML = membersTR;
@@ -247,4 +287,57 @@ function compare(a, b){
 		return -1;
 	}
 	return 0;
+}
+
+function getValueFromKey(array, key){
+	for(var a = 0; a < array.length; a++){
+		if(array[a][0] == key){
+			return array[a][1];
+		}
+	}
+}
+
+function outputMembersManagementList(){
+	var table = document.getElementById("MembersTable");
+	for(var a = 0; a < members.length; a++){
+		var row = table.insertRow();
+		row.insertCell(0).innerHTML = members[a][0];
+		var cell = row.insertCell(1);
+		cell.innerHTML = "<input type='checkbox' id='cbox1' checked>";
+	}
+	$("input[type='checkbox']").each(function(){
+		var _this = $(this)[0];
+		$(this).click(function(evt){
+			if(_this.checked){
+				addMember(_this, false);
+			} else {
+				removeMember(_this, false);
+			}
+
+		});
+	});
+}
+
+function removeMember(checkbox){
+	var memberToRemove = checkbox.parentElement.parentElement.children[0].innerHTML;
+	var index = currMembers.indexOf(memberToRemove);
+	if (index > -1) {
+	    currMembers.splice(index, 1);
+	}
+	updateWebage();
+}
+
+function addMember(checkbox){
+	var memberToAdd = checkbox.parentElement.parentElement.children[0].innerHTML;
+	currMembers.push(memberToAdd);
+	updateWebage();
+}
+
+function refreshDomAndGlobals(){
+	$(".tempRow").each(function(){
+		$(this).remove();
+	});
+	openableBosses = [];
+	requiredBosses = [];
+	initializeRequiredBosses();
 }
